@@ -18,6 +18,11 @@ import Typography from '@mui/material/Typography';
 import { styled } from '@mui/material/styles';
 import MuiGrid from '@mui/material/Grid';
 import DeleteIcon from '@mui/icons-material/Delete';
+import Alert from '@mui/material/Alert';
+import AlertTitle from '@mui/material/AlertTitle';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import CircularProgress from '@mui/material/CircularProgress';
 const Grid = styled(MuiGrid)(({ theme }) => ({
   width: '100%',
   ...theme.typography.body2,
@@ -28,7 +33,7 @@ const Grid = styled(MuiGrid)(({ theme }) => ({
 }));
 
 function Trainer() {
-
+  const [showloader, setShowloader] = useState(false);
   // Tabs
   // Keep the initial value as 1
   const [value, setValue] = React.useState('1');
@@ -41,8 +46,10 @@ function Trainer() {
   // Tabs Done
   const [allCourses, setallCourses] = useState()
   useEffect(() => {
+    setShowloader(true)
     axios.get(BASE_URL + '/course/all')
       .then(response => {
+        setShowloader(false)
         var temp=response.data;
         var size=temp.length;
         for(var i=0; i<size; i++) {
@@ -63,7 +70,19 @@ function Trainer() {
           temp[i].totalsessions=totalsessions;
         }
         setallCourses(temp);
-      });
+      })
+      .catch((err)=>{
+        setShowloader(false)
+        toast.error('Server Error! Please Try Later', {
+            position: "top-right",
+            autoClose: 3000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+          });
+    })
   }, [])
 
 
@@ -83,6 +102,22 @@ function Trainer() {
             </Box>
             <TabPanel value="1">
               <div>
+              {
+                  showloader ? <Box display="flex" 
+                    justifyContent="center"
+                    alignItems="center">
+                    <CircularProgress />
+                  </Box> :      
+                            allCourses?.length == 0 ? <Grid container justify="center" className="mb-4">
+
+
+                              <Alert severity="warning">
+                                <AlertTitle>Warning</AlertTitle>
+                                No course found. Please create one
+                              </Alert>
+                            </Grid> : null
+                          
+                }
                 <Grid container spacing={{ xs: 2, md: 3 }} columns={{ xs: 1, sm: 8, md: 12 }}>
                   {
                     allCourses?.map((e, i) => {

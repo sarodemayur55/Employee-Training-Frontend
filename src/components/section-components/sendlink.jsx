@@ -25,6 +25,7 @@ import Grid from '@mui/material/Grid';
 import AlertTitle from '@mui/material/AlertTitle';
 import Button from '@mui/material/Button';
 import SendIcon from '@mui/icons-material/Send';
+import CircularProgress from '@mui/material/CircularProgress';
 function Sendlink() {
   const [allCourses, setallCourses] = useState([])
   const { user_id, first_name, last_name, role } = useAuthState();
@@ -156,7 +157,7 @@ function Sendlink() {
                   >
                     {
                       allCourses.map((b, i) => {
-                        return b.course_id.mode == 'virtual' ? <MenuItem key={i} value={b.course_id}>{b.batch_name} | {b.course_id.course_name}</MenuItem> : null
+                        return b?.course_id?.mode == 'virtual' ? <MenuItem key={i} value={b.course_id}>{b.batch_name} | {b.course_id.course_name}</MenuItem> : null
                       })
                     }
                   </Select>

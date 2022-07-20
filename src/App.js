@@ -20,13 +20,13 @@ import "./assets/css/style.css"
 // import AWS from 'aws-sdk';
 export default function App() {
     axios.defaults.withCredentials=true;
-    console.log(BASE_URL +"/user/")
+    // console.log(BASE_URL +"/user/")
     const {isAuthenticated,first_name,last_name,role} = useAuthState()
 	const auth = useAuth()
     useEffect(() => {
         axios.get(BASE_URL +"/user/")
       .then(res => {
-        console.log(res)
+        // console.log(res)
         
         auth.batch(s=>{
      
@@ -40,7 +40,7 @@ export default function App() {
           })
       })
       .catch(err => {
-        console.log("Hello")
+        // console.log("Hello")
         auth.isLoading.set(false)
       });
     }, [])

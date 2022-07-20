@@ -4,7 +4,7 @@
 // }
 // var BASE_URL = 'https://employee-training-system.vercel.app'
 // var BASE_URL = 'http://34.227.16.91:5000'
-var BASE_URL = 'https://employee-training-system.vercel.app'
+  var BASE_URL = 'https://employee-training-system.vercel.app'
 // var  BASE_URL = 'http://localhost:5000'
 
 

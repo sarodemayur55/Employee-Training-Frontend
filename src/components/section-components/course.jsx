@@ -94,8 +94,8 @@ export default function Course({ courseinfo }) {
         <Typography variant="h3" gutterBottom component="div" align="center">
           {courseinfo.course_name}
         </Typography>
-        <Grid container spacing={2}>
-          <Grid item xs={8}>
+        <Grid container  spacing={{ xs: 2, md: 3 }} columns={{ xs: 4, sm: 8, md: 12 }}>
+          <Grid item xs={12} sm={12} md={8} >
             <Item>
               <div onClick={() => { setPlay(!play) }}>
                 <ReactPlayer
@@ -117,7 +117,7 @@ export default function Course({ courseinfo }) {
               </div>
             </Item>
           </Grid>
-          <Grid item xs={4}>
+          <Grid item xs={12} sm={12} md={4} >
             <Item>
               <Typography variant="button" display="block" gutterBottom>
                 Course Content

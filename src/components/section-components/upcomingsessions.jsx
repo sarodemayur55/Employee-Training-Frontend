@@ -28,7 +28,7 @@ import { Container } from '@material-ui/core';
 import Alert from '@mui/material/Alert';
 import AlertTitle from '@mui/material/AlertTitle';
 export default function Upcomingsessions({ batchesenrolled }) {
-
+   
     const [batchcourse, setBatchcourse] = useState(null)
     useEffect(() => {
         var create=[]

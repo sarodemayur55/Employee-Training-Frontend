@@ -34,18 +34,21 @@ import Paper from '@mui/material/Paper';
 import FormGroup from '@mui/material/FormGroup';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Checkbox from '@mui/material/Checkbox';
-
+import CircularProgress from '@mui/material/CircularProgress';
 function Trackvirtual() {
     const [testingrerender, setTestingrerender] = useState(1)
     const [allCourses, setallCourses] = useState([])
     const { user_id, first_name, last_name, role } = useAuthState();
+    const [showloader, setShowloader] = useState(false);
     useEffect(() => {
+        setShowloader(true)
         axios.get(BASE_URL + `/batch/trainer/${user_id}`)
             .then(response => {
+                setShowloader(false)
                 changeselectedcourse(null)
                 var temp = [];
-                response.data.map((e, i) => {
-                    if (e.course_id.mode == 'virtual') {
+                response?.data?.map((e, i) => {
+                    if (e?.course_id?.mode == 'virtual') {
                         for (var i = 0; i < e.course_id.virtual.sessionsinfo.length; i++) {
                             var t = e.course_id.virtual.sessionsinfo[i];
                             if (t.date != null) {
@@ -65,7 +68,19 @@ function Trackvirtual() {
                 })
                 setallCourses(temp);
 
-            });
+            })
+            .catch((err)=>{
+                setShowloader(false)
+                toast.error('Server Error! Please Try Later', {
+                    position: "top-right",
+                    autoClose: 3000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                  });
+            })
     }, [testingrerender])
     const [selectedcourse, setSelectedcourse] = useState('')
     const [selectedcourseindex, setSelectedcourseindex] = useState(-1)
@@ -116,7 +131,24 @@ function Trackvirtual() {
     return (
         <div>
             <Container maxWidth="lg">
-                <FormControl fullWidth >
+            {
+                  showloader ? <Box display="flex"
+                    justifyContent="center"
+                    alignItems="center">
+                    <CircularProgress />
+                  </Box> :      
+                            allCourses?.length == 0 ? <Grid container justify="center">
+
+
+                              <Alert severity="warning">
+                                <AlertTitle>Warning</AlertTitle>
+                                No course found. Please create one
+                              </Alert>
+                            </Grid> : null
+                          
+                }
+                
+                <FormControl fullWidth className="mt-2" >
                     <InputLabel id="demo-simple-select-label"> Batch And Course </InputLabel>
                     <Select
                         labelId="demo-simple-select-label"

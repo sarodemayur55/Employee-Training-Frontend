@@ -34,8 +34,12 @@ export default function Signin() {
 		setSignindata({ ...signindata, [e.target.name]: e.target.value });
 	}
 	// console.log(BASE_URL + "/user/login")
+
+	const [showsigninloader, setShowsigninloader] = useState(false)
+
 	const onSubmit = (e) => {
 		e.preventDefault();
+		setShowsigninloader(true);
 		axios(
 			{
 				url: BASE_URL + "/user/login",
@@ -44,8 +48,10 @@ export default function Signin() {
 
 			})
 			.then(res => {
+					setShowsigninloader(false)
+				
 				auth.batch(s => {
-					console.log(res);
+					// console.log(res);
 					s.isAuthenticated.set(true)
 					s.user_id.set(res.data.user._id)
 					s.first_name.set(res.data.user?.first_name || res.data.user?.name)
@@ -55,6 +61,7 @@ export default function Signin() {
 				})
 			})
 			.catch(err => {
+				setShowsigninloader(false)
 				toast.error(err.response.data.message, {
 					position: "top-right",
 					autoClose: 3000,
@@ -114,7 +121,12 @@ export default function Signin() {
 									<div className="col-8 mb-4">
 										{/* <Button type="submit" fullWidth variant="outlined" size="large">Sign In</Button>
 									<Button fullWidth variant="outlined">Outlined</Button> */}
-										<button type="submit" className="btn btn-outline-primary btn-lg btn-block">Sign In</button>
+										{/* <Button  type="submit" fullWidth variant="outlined">Outlined</Button> */}
+									{
+										showsigninloader?<button disabled className="btn btn-outline-primary btn-lg btn-block">Signing You In</button>
+										:<button type="submit" className="btn btn-outline-primary btn-lg btn-block">Sign In</button>
+									}
+										
 									</div>
 								</div>
 							</form>

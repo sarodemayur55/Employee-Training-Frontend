@@ -17,9 +17,12 @@ import MuiGrid from '@mui/material/Grid';
 import Batchdetails from './batchdetails'
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import { useAuthState,useAuth } from '../../states/AuthState';
+import { useAuthState, useAuth } from '../../states/AuthState';
 import Container from '@mui/material/Container';
 import Upcomingsessions from './upcomingsessions'
+import CircularProgress from '@mui/material/CircularProgress';
+import Alert from '@mui/material/Alert';
+import AlertTitle from '@mui/material/AlertTitle';
 const Grid = styled(MuiGrid)(({ theme }) => ({
     width: '100%',
     ...theme.typography.body2,
@@ -28,7 +31,9 @@ const Grid = styled(MuiGrid)(({ theme }) => ({
     },
 }));
 export default function Employee() {
-    const {user_id} = useAuthState()
+    const [batchloader, setBatchloader] = useState(false);
+    const [sessionloader, setSessionloader] = useState(false);
+    const { user_id } = useAuthState()
     const [value, setValue] = React.useState('1');
     const handleChange = (event, newValue) => {
         setValue(newValue);
@@ -37,12 +42,18 @@ export default function Employee() {
     const [batchesenrolled, setBatchesenrolled] = useState([])
 
     useEffect(() => {
+        setBatchloader(true);
+        setSessionloader(true);
         axios.get(BASE_URL + `/employee/allbatches/${user_id}`)
             .then(response => {
                 setBatchesenrolled(response.data.result);
+                setBatchloader(false);
+                setSessionloader(false);
 
             })
             .catch(err => {
+                setBatchloader(false);
+                setSessionloader(false);
                 toast.error('Server Error While Fetching Enrolled Batches', {
                     position: "top-right",
                     autoClose: 3000,
@@ -79,7 +90,24 @@ export default function Employee() {
                                 </TabList>
                             </Box>
                             <TabPanel value="1" >
+
                                 <Container maxWidth="lg">
+                                    {
+                                        batchloader ? <Box display="flex"
+                                            justifyContent="center"
+                                            alignItems="center">
+                                            <CircularProgress />
+                                        </Box> :
+                                            batchesenrolled?.length == 0 ? <Grid container justify="center" className="mb-4">
+
+
+                                                <Alert severity="warning">
+                                                    <AlertTitle>Warning</AlertTitle>
+                                                    You are not enrolled in any batch yet
+                                                </Alert>
+                                            </Grid> : null
+
+                                    }
                                     <Grid container spacing={{ xs: 2, md: 3 }} columns={{ xs: 1, sm: 8, md: 12 }}>
                                         {
                                             batchesenrolled.map((e, i) => {
@@ -103,7 +131,26 @@ export default function Employee() {
                                     </Grid>
                                 </Container>
                             </TabPanel>
-                            <TabPanel value="2"><Upcomingsessions batchesenrolled={batchesenrolled}/></TabPanel>
+                            <TabPanel value="2">
+                            <Container maxWidth="lg">
+                                {
+                                    sessionloader ? <Box display="flex"
+                                        justifyContent="center"
+                                        alignItems="center">
+                                        <CircularProgress />
+                                    </Box> :
+                                        batchesenrolled?.length == 0 ? <Grid container justify="center" className="mb-4">
+
+
+                                            <Alert severity="warning">
+                                                <AlertTitle>Warning</AlertTitle>
+                                                You are not enrolled in any course yet
+                                            </Alert>
+                                        </Grid> : null
+
+                                }
+                                </Container>
+                                <Upcomingsessions batchesenrolled={batchesenrolled} /></TabPanel>
                             {/* <TabPanel value="3">Item Three</TabPanel> */}
                         </TabContext>
                     </Box>
