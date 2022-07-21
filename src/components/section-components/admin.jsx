@@ -50,6 +50,7 @@ import underconstruction from '../../assets/img/signin/underconstruction-removeb
 import HandymanSharpIcon from '@mui/icons-material/HandymanSharp';
 import LoadingButton from '@mui/lab/LoadingButton';
 import SaveIcon from '@mui/icons-material/Save';
+
 import { Buffer } from 'buffer';
 
 // import AWS from 'aws-sdk'
@@ -68,7 +69,7 @@ const config = {
 const Item = styled(Paper)(({ theme }) => ({
   backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
   ...theme.typography.body2,
-  padding: theme.spacing(1),
+  padding: theme.spacing(2),
   textAlign: 'center',
   color: theme.palette.text.secondary,
 }));
